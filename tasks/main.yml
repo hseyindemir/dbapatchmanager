@@ -7,6 +7,7 @@
   when: >-
     ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat
     Enterprise Linux'
+  failed_when: "The service does not exists on the server"
 - name: Stop service couchbase, if started
   service:
     name: couchbase
@@ -14,6 +15,7 @@
   when: >-
     ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat
     Enterprise Linux'
+  failed_when: "The service does not exists on the server"
 - name: Sleep for 30 seconds
   wait_for:
     timeout: 30
