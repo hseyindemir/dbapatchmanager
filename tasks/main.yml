@@ -4,10 +4,11 @@
   service:
     name: patroni
     state: stopped
+  ignore_erros: true
   when: >-
     ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat
     Enterprise Linux'
-  ignore_erros: yes
+  
 - name: Sleep for 30 seconds
   wait_for:
     timeout: 30
@@ -41,16 +42,14 @@
   service:
     name: patroni
     state: started
+  ignore_erros: true
   when: >-
     ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat
     Enterprise Linux'
-  ignore_erros: yes
-
-
-- name: Prevent packages from being upgraded
+- name: Mark important packages in order to prevent disaster - dba
   shell: apt-mark hold couchbase* linux* openjdk* init* grub* x11* libxcursor* pam* libx11* cloud-* busybox* libpam*
   when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
-- name: Update all packages
+- name: Update all packages on Debian and Ubuntu
   apt:
     name: "*"
     state: latest
