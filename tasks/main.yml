@@ -1,0 +1,41 @@
+---
+# tasks file for dbpatchmanager
+- name: Stop service postgresql, if started
+  service:
+    name: patroni
+    state: stopped
+  when: >-
+    ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat
+    Enterprise Linux'
+- name: Stop service couchbase, if started
+  service:
+    name: couchbase
+    state: stopped
+  when: >-
+    ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat
+    Enterprise Linux'
+- name: Sleep for 30 seconds
+  wait_for:
+    timeout: 30
+  delegate_to: localhost
+- name: Update all packages - excluded database related ones
+  yum:
+    name: "*"
+    state: latest
+    exclude: pg*, postg*, python*, patroni*, kernel*, barman*, pgbackrest*,couchbase*
+    skip_broken: yes
+    update_cache: yes
+  when: >-
+    ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat
+    Enterprise Linux'
+
+- name: update database packages
+  yum:
+    name:
+      - postgresql*
+      - pg*
+      - couchbase*
+    state: latest
+  when: >-
+    ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat
+    Enterprise Linux'
