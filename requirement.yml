@@ -1,0 +1,4 @@
+- src: https://github.com/hseyindemir/dbapatchmanager.git
+  scm: git
+  version: "0.0.1"
+  name: dbpatchmanager
