@@ -28,7 +28,10 @@
   when: >-
     ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat
     Enterprise Linux'
-
+- name: Sleep for 30 seconds
+  wait_for:
+    timeout: 30
+  delegate_to: localhost
 - name: update database packages
   yum:
     name:
