@@ -4,6 +4,7 @@
   service:
     name: patroni
     state: stopped
+  ignore_erros: yes
   when: >-
     ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat
     Enterprise Linux'
@@ -12,6 +13,7 @@
   service:
     name: couchbase
     state: stopped
+  ignore_erros: yes
   when: >-
     ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat
     Enterprise Linux'
@@ -27,6 +29,7 @@
     exclude: pg*, postg*, python*, patroni*, kernel*, barman*, pgbackrest*,couchbase*
     skip_broken: yes
     update_cache: yes
+    update_only: yes
   when: >-
     ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat
     Enterprise Linux'
@@ -39,8 +42,8 @@
     name:
       - postgresql*
       - pg*
-      - couchbase*
     state: latest
+    update_only: yes
   when: >-
     ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat
     Enterprise Linux'
