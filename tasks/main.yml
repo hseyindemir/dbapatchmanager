@@ -4,20 +4,10 @@
   service:
     name: patroni
     state: stopped
-  ignore_erros: yes
   when: >-
     ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat
     Enterprise Linux'
-  failed_when: "The service does not exists on the server"
-- name: Stop service couchbase, if started
-  service:
-    name: couchbase
-    state: stopped
   ignore_erros: yes
-  when: >-
-    ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat
-    Enterprise Linux'
-  failed_when: "The service does not exists on the server"
 - name: Sleep for 30 seconds
   wait_for:
     timeout: 30
@@ -41,9 +31,27 @@
   yum:
     name:
       - postgresql*
-      - pg*
     state: latest
     update_only: yes
   when: >-
     ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat
     Enterprise Linux'
+
+- name: Start service postgresql, if started
+  service:
+    name: patroni
+    state: started
+  when: >-
+    ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat
+    Enterprise Linux'
+  ignore_erros: yes
+
+
+- name: Prevent packages from being upgraded
+  shell: apt-mark hold couchbase* linux* openjdk* init* grub* x11* libxcursor* pam* libx11* cloud-* busybox* libpam*
+  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+- name: Update all packages
+  apt:
+    name: "*"
+    state: latest
+  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
