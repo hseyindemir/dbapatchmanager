@@ -1,53 +1,19 @@
 ---
 # tasks file for dbpatchmanager
-- name: Stop service postgresql, if started
-  service:
-    name: patroni
-    state: stopped
-  ignore_errors: true
-  when: >-
-    ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat
-    Enterprise Linux'
-  
-- name: Sleep for 30 seconds
-  wait_for:
-    timeout: 30
-  delegate_to: localhost
 - name: Update all packages - excluded database related ones
   yum:
     name: "*"
     state: latest
-    exclude: pg*, postg*, python*, patroni*, kernel*, barman*, pgbackrest*,couchbase*
+    exclude: pg*, postg*, python*, patroni*, barman*, pgbackrest*,couchbase*,postgis*
     skip_broken: yes
     update_cache: yes
     update_only: yes
   when: >-
     ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat
     Enterprise Linux'
-- name: Sleep for 30 seconds
-  wait_for:
-    timeout: 30
-  delegate_to: localhost
-- name: update database packages
-  yum:
-    name:
-      - postgresql*
-    state: latest
-    update_only: yes
-  when: >-
-    ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat
-    Enterprise Linux'
 
-- name: Start service postgresql, if started
-  service:
-    name: patroni
-    state: started
-  ignore_errors: true
-  when: >-
-    ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat
-    Enterprise Linux'
 - name: Mark important packages in order to prevent disaster - dba
-  shell: apt-mark hold couchbase* linux* openjdk* init* grub* x11* libxcursor* pam* libx11* cloud-* busybox* libpam*
+  shell: apt-mark hold couchbase* postgresql*
   when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
 - name: Update all packages on Debian and Ubuntu
   apt:
