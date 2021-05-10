@@ -4,7 +4,7 @@
   yum:
     name: "*"
     state: latest
-    exclude: pg*, postg*, python*, patroni*, barman*, pgbackrest*,couchbase*,postgis*
+    exclude: pg*, postg*, python*, patroni*, barman*, pgbackrest*,couchbase*,postgis*,etc*,haproxy*
     skip_broken: yes
     update_cache: yes
     update_only: yes
